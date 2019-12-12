@@ -1,8 +1,8 @@
 {
-  "name": "engine.io-client",
+  "name": "@jonny/engine.io-client",
   "description": "Client for the realtime Engine",
   "license": "MIT",
-  "version": "3.4.0",
+  "version": "3.4.2",
   "main": "lib/index.js",
   "homepage": "https://github.com/socketio/engine.io-client",
   "contributors": [
@@ -27,7 +27,7 @@
     "component-emitter": "1.2.1",
     "component-inherit": "0.0.3",
     "debug": "~4.1.0",
-    "engine.io-parser": "~2.2.0",
+    "@jonny/engine.io-parser": "~2.2.0",
     "has-cors": "1.1.0",
     "indexof": "0.0.1",
     "parseqs": "0.0.5",
