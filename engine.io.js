@@ -63,7 +63,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api public
 	 *
 	 */
-	module.exports.parser = __webpack_require__(8);
+	module.exports.parser = __webpack_require__(5);
 
 
 /***/ },
@@ -75,12 +75,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	var transports = __webpack_require__(2);
-	var Emitter = __webpack_require__(17);
-	var debug = __webpack_require__(21)('engine.io-client:socket');
-	var index = __webpack_require__(28);
-	var parser = __webpack_require__(8);
-	var parseuri = __webpack_require__(29);
-	var parseqs = __webpack_require__(18);
+	var Emitter = __webpack_require__(14);
+	var parser = __webpack_require__(5);
+	var parseuri = __webpack_require__(19);
+	var parseqs = __webpack_require__(15);
 
 	/**
 	 * Module exports.
@@ -96,12 +94,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api public
 	 */
 
-	function Socket (uri, opts) {
+	function Socket(uri, opts) {
 	  if (!(this instanceof Socket)) return new Socket(uri, opts);
 
 	  opts = opts || {};
 
-	  if (uri && 'object' === typeof uri) {
+	  if (uri && "object" === typeof uri) {
 	    opts = uri;
 	    uri = null;
 	  }
@@ -109,48 +107,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (uri) {
 	    uri = parseuri(uri);
 	    opts.hostname = uri.host;
-	    opts.secure = uri.protocol === 'https' || uri.protocol === 'wss';
+	    opts.secure = uri.protocol === "https" || uri.protocol === "wss";
 	    opts.port = uri.port;
 	    if (uri.query) opts.query = uri.query;
 	  } else if (opts.host) {
 	    opts.hostname = parseuri(opts.host).host;
 	  }
 
-	  this.secure = null != opts.secure ? opts.secure
-	    : (typeof location !== 'undefined' && 'https:' === location.protocol);
+	  this.secure =
+	    null != opts.secure
+	      ? opts.secure
+	      : typeof location !== "undefined" && "https:" === location.protocol;
 
 	  if (opts.hostname && !opts.port) {
 	    // if no port is specified manually, use the protocol default
-	    opts.port = this.secure ? '443' : '80';
+	    opts.port = this.secure ? "443" : "80";
 	  }
 
 	  this.agent = opts.agent || false;
-	  this.hostname = opts.hostname ||
-	    (typeof location !== 'undefined' ? location.hostname : 'localhost');
-	  this.port = opts.port || (typeof location !== 'undefined' && location.port
+	  this.hostname =
+	    opts.hostname ||
+	    (typeof location !== "undefined" ? location.hostname : "localhost");
+	  this.port =
+	    opts.port ||
+	    (typeof location !== "undefined" && location.port
 	      ? location.port
-	      : (this.secure ? 443 : 80));
+	      : this.secure
+	      ? 443
+	      : 80);
 	  this.query = opts.query || {};
-	  if ('string' === typeof this.query) this.query = parseqs.decode(this.query);
+	  if ("string" === typeof this.query) this.query = parseqs.decode(this.query);
 	  this.upgrade = false !== opts.upgrade;
-	  this.path = (opts.path || '/engine.io').replace(/\/$/, '') + '/';
+	  this.path = (opts.path || "/engine.io").replace(/\/$/, "") + "/";
 	  this.forceJSONP = !!opts.forceJSONP;
 	  this.jsonp = false !== opts.jsonp;
 	  this.forceBase64 = !!opts.forceBase64;
 	  this.enablesXDR = !!opts.enablesXDR;
 	  this.withCredentials = false !== opts.withCredentials;
-	  this.timestampParam = opts.timestampParam || 't';
+	  this.timestampParam = opts.timestampParam || "t";
 	  this.timestampRequests = opts.timestampRequests;
-	  this.transports = opts.transports || ['polling', 'websocket'];
+	  this.transports = opts.transports || ["polling", "websocket"];
 	  this.transportOptions = opts.transportOptions || {};
-	  this.readyState = '';
+	  this.readyState = "";
 	  this.writeBuffer = [];
 	  this.prevBufferLen = 0;
 	  this.policyPort = opts.policyPort || 843;
 	  this.rememberUpgrade = opts.rememberUpgrade || false;
 	  this.binaryType = null;
 	  this.onlyBinaryUpgrades = opts.onlyBinaryUpgrades;
-	  this.perMessageDeflate = false !== opts.perMessageDeflate ? (opts.perMessageDeflate || {}) : false;
+	  this.perMessageDeflate =
+	    false !== opts.perMessageDeflate ? opts.perMessageDeflate || {} : false;
 
 	  if (true === this.perMessageDeflate) this.perMessageDeflate = {};
 	  if (this.perMessageDeflate && null == this.perMessageDeflate.threshold) {
@@ -164,14 +170,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.cert = opts.cert || null;
 	  this.ca = opts.ca || null;
 	  this.ciphers = opts.ciphers || null;
-	  this.rejectUnauthorized = opts.rejectUnauthorized === undefined ? true : opts.rejectUnauthorized;
+	  this.rejectUnauthorized =
+	    opts.rejectUnauthorized === undefined ? true : opts.rejectUnauthorized;
 	  this.forceNode = !!opts.forceNode;
 
 	  // detect ReactNative environment
-	  this.isReactNative = (typeof navigator !== 'undefined' && typeof navigator.product === 'string' && navigator.product.toLowerCase() === 'reactnative');
+	  this.isReactNative =
+	    typeof navigator !== "undefined" &&
+	    typeof navigator.product === "string" &&
+	    navigator.product.toLowerCase() === "reactnative";
 
 	  // other options for Node.js or ReactNative client
-	  if (typeof self === 'undefined' || this.isReactNative) {
+	  if (typeof self === "undefined" || this.isReactNative) {
 	    if (opts.extraHeaders && Object.keys(opts.extraHeaders).length > 0) {
 	      this.extraHeaders = opts.extraHeaders;
 	    }
@@ -216,9 +226,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	Socket.Socket = Socket;
-	Socket.Transport = __webpack_require__(7);
+	Socket.Transport = __webpack_require__(4);
 	Socket.transports = __webpack_require__(2);
-	Socket.parser = __webpack_require__(8);
+	Socket.parser = __webpack_require__(5);
 
 	/**
 	 * Creates transport of the given type.
@@ -228,8 +238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.createTransport = function (name) {
-	  debug('creating transport "%s"', name);
+	Socket.prototype.createTransport = function(name) {
 	  var query = clone(this.query);
 
 	  // append engine.io protocol identifier
@@ -272,14 +281,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    forceNode: options.forceNode || this.forceNode,
 	    localAddress: options.localAddress || this.localAddress,
 	    requestTimeout: options.requestTimeout || this.requestTimeout,
-	    protocols: options.protocols || void (0),
+	    protocols: options.protocols || void 0,
 	    isReactNative: this.isReactNative
 	  });
 
 	  return transport;
 	};
 
-	function clone (obj) {
+	function clone(obj) {
 	  var o = {};
 	  for (var i in obj) {
 	    if (obj.hasOwnProperty(i)) {
@@ -294,21 +303,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @api private
 	 */
-	Socket.prototype.open = function () {
+	Socket.prototype.open = function() {
 	  var transport;
-	  if (this.rememberUpgrade && Socket.priorWebsocketSuccess && this.transports.indexOf('websocket') !== -1) {
-	    transport = 'websocket';
+	  if (
+	    this.rememberUpgrade &&
+	    Socket.priorWebsocketSuccess &&
+	    this.transports.indexOf("websocket") !== -1
+	  ) {
+	    transport = "websocket";
 	  } else if (0 === this.transports.length) {
 	    // Emit error on next tick so it can be listened to
 	    var self = this;
-	    setTimeout(function () {
-	      self.emit('error', 'No transports available');
+	    setTimeout(function() {
+	      self.emit("error", "No transports available");
 	    }, 0);
 	    return;
 	  } else {
 	    transport = this.transports[0];
 	  }
-	  this.readyState = 'opening';
+	  this.readyState = "opening";
 
 	  // Retry with the next transport if the transport is disabled (jsonp: false)
 	  try {
@@ -329,12 +342,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.setTransport = function (transport) {
-	  debug('setting transport %s', transport.name);
+	Socket.prototype.setTransport = function(transport) {
 	  var self = this;
 
 	  if (this.transport) {
-	    debug('clearing existing transport %s', this.transport.name);
 	    this.transport.removeAllListeners();
 	  }
 
@@ -343,18 +354,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  // set up transport listeners
 	  transport
-	  .on('drain', function () {
-	    self.onDrain();
-	  })
-	  .on('packet', function (packet) {
-	    self.onPacket(packet);
-	  })
-	  .on('error', function (e) {
-	    self.onError(e);
-	  })
-	  .on('close', function () {
-	    self.onClose('transport close');
-	  });
+	    .on("drain", function() {
+	      self.onDrain();
+	    })
+	    .on("packet", function(packet) {
+	      self.onPacket(packet);
+	    })
+	    .on("error", function(e) {
+	      self.onError(e);
+	    })
+	    .on("close", function() {
+	      self.onClose("transport close");
+	    });
 	};
 
 	/**
@@ -364,57 +375,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.probe = function (name) {
-	  debug('probing transport "%s"', name);
+	Socket.prototype.probe = function(name) {
 	  var transport = this.createTransport(name, { probe: 1 });
 	  var failed = false;
 	  var self = this;
 
 	  Socket.priorWebsocketSuccess = false;
 
-	  function onTransportOpen () {
+	  function onTransportOpen() {
 	    if (self.onlyBinaryUpgrades) {
-	      var upgradeLosesBinary = !this.supportsBinary && self.transport.supportsBinary;
+	      var upgradeLosesBinary =
+	        !this.supportsBinary && self.transport.supportsBinary;
 	      failed = failed || upgradeLosesBinary;
 	    }
 	    if (failed) return;
 
-	    debug('probe transport "%s" opened', name);
-	    transport.send([{ type: 'ping', data: 'probe' }]);
-	    transport.once('packet', function (msg) {
+	    transport.send([{ type: "ping", data: "probe" }]);
+	    transport.once("packet", function(msg) {
 	      if (failed) return;
-	      if ('pong' === msg.type && 'probe' === msg.data) {
-	        debug('probe transport "%s" pong', name);
+	      if ("pong" === msg.type && "probe" === msg.data) {
 	        self.upgrading = true;
-	        self.emit('upgrading', transport);
+	        self.emit("upgrading", transport);
 	        if (!transport) return;
-	        Socket.priorWebsocketSuccess = 'websocket' === transport.name;
+	        Socket.priorWebsocketSuccess = "websocket" === transport.name;
 
-	        debug('pausing current transport "%s"', self.transport.name);
-	        self.transport.pause(function () {
+	        self.transport.pause(function() {
 	          if (failed) return;
-	          if ('closed' === self.readyState) return;
-	          debug('changing transport and sending upgrade packet');
+	          if ("closed" === self.readyState) return;
 
 	          cleanup();
 
 	          self.setTransport(transport);
-	          transport.send([{ type: 'upgrade' }]);
-	          self.emit('upgrade', transport);
+	          transport.send([{ type: "upgrade" }]);
+	          self.emit("upgrade", transport);
 	          transport = null;
 	          self.upgrading = false;
 	          self.flush();
 	        });
 	      } else {
-	        debug('probe transport "%s" failed', name);
-	        var err = new Error('probe error');
+	        var err = new Error("probe error");
 	        err.transport = transport.name;
-	        self.emit('upgradeError', err);
+	        self.emit("upgradeError", err);
 	      }
 	    });
 	  }
 
-	  function freezeTransport () {
+	  function freezeTransport() {
 	    if (failed) return;
 
 	    // Any callback called by transport should be ignored since now
@@ -427,49 +433,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  // Handle any error that happens while probing
-	  function onerror (err) {
-	    var error = new Error('probe error: ' + err);
+	  function onerror(err) {
+	    var error = new Error("probe error: " + err);
 	    error.transport = transport.name;
 
 	    freezeTransport();
 
-	    debug('probe transport "%s" failed because of error: %s', name, err);
-
-	    self.emit('upgradeError', error);
+	    self.emit("upgradeError", error);
 	  }
 
-	  function onTransportClose () {
-	    onerror('transport closed');
+	  function onTransportClose() {
+	    onerror("transport closed");
 	  }
 
 	  // When the socket is closed while we're probing
-	  function onclose () {
-	    onerror('socket closed');
+	  function onclose() {
+	    onerror("socket closed");
 	  }
 
 	  // When the socket is upgraded while we're probing
-	  function onupgrade (to) {
+	  function onupgrade(to) {
 	    if (transport && to.name !== transport.name) {
-	      debug('"%s" works - aborting "%s"', to.name, transport.name);
 	      freezeTransport();
 	    }
 	  }
 
 	  // Remove all listeners on the transport and on self
-	  function cleanup () {
-	    transport.removeListener('open', onTransportOpen);
-	    transport.removeListener('error', onerror);
-	    transport.removeListener('close', onTransportClose);
-	    self.removeListener('close', onclose);
-	    self.removeListener('upgrading', onupgrade);
+	  function cleanup() {
+	    transport.removeListener("open", onTransportOpen);
+	    transport.removeListener("error", onerror);
+	    transport.removeListener("close", onTransportClose);
+	    self.removeListener("close", onclose);
+	    self.removeListener("upgrading", onupgrade);
 	  }
 
-	  transport.once('open', onTransportOpen);
-	  transport.once('error', onerror);
-	  transport.once('close', onTransportClose);
+	  transport.once("open", onTransportOpen);
+	  transport.once("error", onerror);
+	  transport.once("close", onTransportClose);
 
-	  this.once('close', onclose);
-	  this.once('upgrading', onupgrade);
+	  this.once("close", onclose);
+	  this.once("upgrading", onupgrade);
 
 	  transport.open();
 	};
@@ -480,17 +483,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api public
 	 */
 
-	Socket.prototype.onOpen = function () {
-	  debug('socket open');
-	  this.readyState = 'open';
-	  Socket.priorWebsocketSuccess = 'websocket' === this.transport.name;
-	  this.emit('open');
+	Socket.prototype.onOpen = function() {
+	  this.readyState = "open";
+	  Socket.priorWebsocketSuccess = "websocket" === this.transport.name;
+	  this.emit("open");
 	  this.flush();
 
 	  // we check for `readyState` in case an `open`
 	  // listener already closed the socket
-	  if ('open' === this.readyState && this.upgrade && this.transport.pause) {
-	    debug('starting upgrade probes');
+	  if ("open" === this.readyState && this.upgrade && this.transport.pause) {
 	    for (var i = 0, l = this.upgrades.length; i < l; i++) {
 	      this.probe(this.upgrades[i]);
 	    }
@@ -503,39 +504,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.onPacket = function (packet) {
-	  if ('opening' === this.readyState || 'open' === this.readyState ||
-	      'closing' === this.readyState) {
-	    debug('socket receive: type "%s", data "%s"', packet.type, packet.data);
-
-	    this.emit('packet', packet);
+	Socket.prototype.onPacket = function(packet) {
+	  if (
+	    "opening" === this.readyState ||
+	    "open" === this.readyState ||
+	    "closing" === this.readyState
+	  ) {
+	    this.emit("packet", packet);
 
 	    // Socket is live - any packet counts
-	    this.emit('heartbeat');
+	    this.emit("heartbeat");
 
 	    switch (packet.type) {
-	      case 'open':
+	      case "open":
 	        this.onHandshake(JSON.parse(packet.data));
 	        break;
 
-	      case 'pong':
+	      case "pong":
 	        this.setPing();
-	        this.emit('pong');
+	        this.emit("pong");
 	        break;
 
-	      case 'error':
-	        var err = new Error('server error');
+	      case "error":
+	        var err = new Error("server error");
 	        err.code = packet.data;
 	        this.onError(err);
 	        break;
 
-	      case 'message':
-	        this.emit('data', packet.data);
-	        this.emit('message', packet.data);
+	      case "message":
+	        this.emit("data", packet.data);
+	        this.emit("message", packet.data);
 	        break;
 	    }
 	  } else {
-	    debug('packet received with socket readyState "%s"', this.readyState);
 	  }
 	};
 
@@ -546,8 +547,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.onHandshake = function (data) {
-	  this.emit('handshake', data);
+	Socket.prototype.onHandshake = function(data) {
+	  this.emit("handshake", data);
 	  this.id = data.sid;
 	  this.transport.query.sid = data.sid;
 	  this.upgrades = this.filterUpgrades(data.upgrades);
@@ -555,12 +556,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.pingTimeout = data.pingTimeout;
 	  this.onOpen();
 	  // In case open handler closes socket
-	  if ('closed' === this.readyState) return;
+	  if ("closed" === this.readyState) return;
 	  this.setPing();
 
 	  // Prolong liveness of socket on heartbeat
-	  this.removeListener('heartbeat', this.onHeartbeat);
-	  this.on('heartbeat', this.onHeartbeat);
+	  this.removeListener("heartbeat", this.onHeartbeat);
+	  this.on("heartbeat", this.onHeartbeat);
 	};
 
 	/**
@@ -569,13 +570,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.onHeartbeat = function (timeout) {
+	Socket.prototype.onHeartbeat = function(timeout) {
 	  clearTimeout(this.pingTimeoutTimer);
 	  var self = this;
-	  self.pingTimeoutTimer = setTimeout(function () {
-	    if ('closed' === self.readyState) return;
-	    self.onClose('ping timeout');
-	  }, timeout || (self.pingInterval + self.pingTimeout));
+	  self.pingTimeoutTimer = setTimeout(function() {
+	    if ("closed" === self.readyState) return;
+	    self.onClose("ping timeout");
+	  }, timeout || self.pingInterval + self.pingTimeout);
 	};
 
 	/**
@@ -585,26 +586,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.setPing = function () {
+	Socket.prototype.setPing = function() {
 	  var self = this;
 	  clearTimeout(self.pingIntervalTimer);
-	  self.pingIntervalTimer = setTimeout(function () {
-	    debug('writing ping packet - expecting pong within %sms', self.pingTimeout);
+	  self.pingIntervalTimer = setTimeout(function() {
 	    self.ping();
 	    self.onHeartbeat(self.pingTimeout);
 	  }, self.pingInterval);
 	};
 
 	/**
-	* Sends a ping packet.
-	*
-	* @api private
-	*/
+	 * Sends a ping packet.
+	 *
+	 * @api private
+	 */
 
-	Socket.prototype.ping = function () {
+	Socket.prototype.ping = function() {
 	  var self = this;
-	  this.sendPacket('ping', function () {
-	    self.emit('ping');
+	  this.sendPacket("ping", function() {
+	    self.emit("ping");
 	  });
 	};
 
@@ -614,7 +614,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.onDrain = function () {
+	Socket.prototype.onDrain = function() {
 	  this.writeBuffer.splice(0, this.prevBufferLen);
 
 	  // setting prevBufferLen = 0 is very important
@@ -623,7 +623,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.prevBufferLen = 0;
 
 	  if (0 === this.writeBuffer.length) {
-	    this.emit('drain');
+	    this.emit("drain");
 	  } else {
 	    this.flush();
 	  }
@@ -635,15 +635,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.flush = function () {
-	  if ('closed' !== this.readyState && this.transport.writable &&
-	    !this.upgrading && this.writeBuffer.length) {
-	    debug('flushing %d packets in socket', this.writeBuffer.length);
+	Socket.prototype.flush = function() {
+	  if (
+	    "closed" !== this.readyState &&
+	    this.transport.writable &&
+	    !this.upgrading &&
+	    this.writeBuffer.length
+	  ) {
 	    this.transport.send(this.writeBuffer);
 	    // keep track of current length of writeBuffer
 	    // splice writeBuffer and callbackBuffer on `drain`
 	    this.prevBufferLen = this.writeBuffer.length;
-	    this.emit('flush');
+	    this.emit("flush");
 	  }
 	};
 
@@ -657,9 +660,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api public
 	 */
 
-	Socket.prototype.write =
-	Socket.prototype.send = function (msg, options, fn) {
-	  this.sendPacket('message', msg, options, fn);
+	Socket.prototype.write = Socket.prototype.send = function(msg, options, fn) {
+	  this.sendPacket("message", msg, options, fn);
 	  return this;
 	};
 
@@ -673,18 +675,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.sendPacket = function (type, data, options, fn) {
-	  if ('function' === typeof data) {
+	Socket.prototype.sendPacket = function(type, data, options, fn) {
+	  if ("function" === typeof data) {
 	    fn = data;
 	    data = undefined;
 	  }
 
-	  if ('function' === typeof options) {
+	  if ("function" === typeof options) {
 	    fn = options;
 	    options = null;
 	  }
 
-	  if ('closing' === this.readyState || 'closed' === this.readyState) {
+	  if ("closing" === this.readyState || "closed" === this.readyState) {
 	    return;
 	  }
 
@@ -696,9 +698,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    data: data,
 	    options: options
 	  };
-	  this.emit('packetCreate', packet);
+	  this.emit("packetCreate", packet);
 	  this.writeBuffer.push(packet);
-	  if (fn) this.once('flush', fn);
+	  if (fn) this.once("flush", fn);
 	  this.flush();
 	};
 
@@ -708,14 +710,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.close = function () {
-	  if ('opening' === this.readyState || 'open' === this.readyState) {
-	    this.readyState = 'closing';
+	Socket.prototype.close = function() {
+	  if ("opening" === this.readyState || "open" === this.readyState) {
+	    this.readyState = "closing";
 
 	    var self = this;
 
 	    if (this.writeBuffer.length) {
-	      this.once('drain', function () {
+	      this.once("drain", function() {
 	        if (this.upgrading) {
 	          waitForUpgrade();
 	        } else {
@@ -729,22 +731,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
-	  function close () {
-	    self.onClose('forced close');
-	    debug('socket closing - telling transport to close');
+	  function close() {
+	    self.onClose("forced close");
 	    self.transport.close();
 	  }
 
-	  function cleanupAndClose () {
-	    self.removeListener('upgrade', cleanupAndClose);
-	    self.removeListener('upgradeError', cleanupAndClose);
+	  function cleanupAndClose() {
+	    self.removeListener("upgrade", cleanupAndClose);
+	    self.removeListener("upgradeError", cleanupAndClose);
 	    close();
 	  }
 
-	  function waitForUpgrade () {
+	  function waitForUpgrade() {
 	    // wait for upgrade to finish since we can't send packets while pausing a transport
-	    self.once('upgrade', cleanupAndClose);
-	    self.once('upgradeError', cleanupAndClose);
+	    self.once("upgrade", cleanupAndClose);
+	    self.once("upgradeError", cleanupAndClose);
 	  }
 
 	  return this;
@@ -756,11 +757,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.onError = function (err) {
-	  debug('socket error %j', err);
+	Socket.prototype.onError = function(err) {
 	  Socket.priorWebsocketSuccess = false;
-	  this.emit('error', err);
-	  this.onClose('transport error', err);
+	  this.emit("error", err);
+	  this.onClose("transport error", err);
 	};
 
 	/**
@@ -769,9 +769,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Socket.prototype.onClose = function (reason, desc) {
-	  if ('opening' === this.readyState || 'open' === this.readyState || 'closing' === this.readyState) {
-	    debug('socket close with reason: "%s"', reason);
+	Socket.prototype.onClose = function(reason, desc) {
+	  if (
+	    "opening" === this.readyState ||
+	    "open" === this.readyState ||
+	    "closing" === this.readyState
+	  ) {
 	    var self = this;
 
 	    // clear timers
@@ -779,7 +782,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    clearTimeout(this.pingTimeoutTimer);
 
 	    // stop event from firing again for transport
-	    this.transport.removeAllListeners('close');
+	    this.transport.removeAllListeners("close");
 
 	    // ensure transport won't stay open
 	    this.transport.close();
@@ -788,13 +791,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.transport.removeAllListeners();
 
 	    // set ready state
-	    this.readyState = 'closed';
+	    this.readyState = "closed";
 
 	    // clear session id
 	    this.id = null;
 
 	    // emit close event
-	    this.emit('close', reason, desc);
+	    this.emit("close", reason, desc);
 
 	    // clean buffers after, so users can still
 	    // grab the buffers on `close` event
@@ -811,10 +814,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 */
 
-	Socket.prototype.filterUpgrades = function (upgrades) {
+	Socket.prototype.filterUpgrades = function(upgrades) {
 	  var filteredUpgrades = [];
 	  for (var i = 0, j = upgrades.length; i < j; i++) {
-	    if (~index(this.transports, upgrades[i])) filteredUpgrades.push(upgrades[i]);
+	    if (~this.transports.indexOf(upgrades[i]))
+	      filteredUpgrades.push(upgrades[i]);
 	  }
 	  return filteredUpgrades;
 	};
@@ -828,16 +832,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Module dependencies
 	 */
 
-	var XMLHttpRequest = __webpack_require__(3);
-	var XHR = __webpack_require__(5);
-	var JSONP = __webpack_require__(25);
-	var websocket = __webpack_require__(26);
+	var websocket = __webpack_require__(3);
 
 	/**
 	 * Export transports.
 	 */
 
-	exports.polling = polling;
 	exports.websocket = websocket;
 
 	/**
@@ -847,569 +847,66 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	function polling (opts) {
-	  var xhr;
-	  var xd = false;
-	  var xs = false;
-	  var jsonp = false !== opts.jsonp;
-
-	  if (typeof location !== 'undefined') {
-	    var isSSL = 'https:' === location.protocol;
-	    var port = location.port;
-
-	    // some user agents have empty `location.port`
-	    if (!port) {
-	      port = isSSL ? 443 : 80;
-	    }
-
-	    xd = opts.hostname !== location.hostname || port !== opts.port;
-	    xs = opts.secure !== isSSL;
-	  }
-
-	  opts.xdomain = xd;
-	  opts.xscheme = xs;
-	  xhr = new XMLHttpRequest(opts);
-
-	  if ('open' in xhr && !opts.forceJSONP) {
-	    return new XHR(opts);
-	  } else {
-	    if (!jsonp) throw new Error('JSONP disabled');
-	    return new JSONP(opts);
-	  }
-	}
-
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// browser shim for xmlhttprequest module
-
-	var hasCORS = __webpack_require__(4);
-
-	module.exports = function (opts) {
-	  var xdomain = opts.xdomain;
-
-	  // scheme must be same when usign XDomainRequest
-	  // http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
-	  var xscheme = opts.xscheme;
-
-	  // XDomainRequest has a flow of not sending cookie, therefore it should be disabled as a default.
-	  // https://github.com/Automattic/engine.io-client/pull/217
-	  var enablesXDR = opts.enablesXDR;
-
-	  // XMLHttpRequest can be disabled on IE
-	  try {
-	    if ('undefined' !== typeof XMLHttpRequest && (!xdomain || hasCORS)) {
-	      return new XMLHttpRequest();
-	    }
-	  } catch (e) { }
-
-	  // Use XDomainRequest for IE8 if enablesXDR is true
-	  // because loading bar keeps flashing when using jsonp-polling
-	  // https://github.com/yujiosaka/socke.io-ie8-loading-example
-	  try {
-	    if ('undefined' !== typeof XDomainRequest && !xscheme && enablesXDR) {
-	      return new XDomainRequest();
-	    }
-	  } catch (e) { }
-
-	  if (!xdomain) {
-	    try {
-	      return new self[['Active'].concat('Object').join('X')]('Microsoft.XMLHTTP');
-	    } catch (e) { }
-	  }
-	};
-
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	
-	/**
-	 * Module exports.
-	 *
-	 * Logic borrowed from Modernizr:
-	 *
-	 *   - https://github.com/Modernizr/Modernizr/blob/master/feature-detects/cors.js
-	 */
-
-	try {
-	  module.exports = typeof XMLHttpRequest !== 'undefined' &&
-	    'withCredentials' in new XMLHttpRequest();
-	} catch (err) {
-	  // if XMLHttp support is disabled in IE then it will throw
-	  // when trying to create
-	  module.exports = false;
-	}
-
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* global attachEvent */
-
-	/**
-	 * Module requirements.
-	 */
-
-	var XMLHttpRequest = __webpack_require__(3);
-	var Polling = __webpack_require__(6);
-	var Emitter = __webpack_require__(17);
-	var inherit = __webpack_require__(19);
-	var debug = __webpack_require__(21)('engine.io-client:polling-xhr');
-
-	/**
-	 * Module exports.
-	 */
-
-	module.exports = XHR;
-	module.exports.Request = Request;
-
-	/**
-	 * Empty function
-	 */
-
-	function empty () {}
-
-	/**
-	 * XHR Polling constructor.
-	 *
-	 * @param {Object} opts
-	 * @api public
-	 */
-
-	function XHR (opts) {
-	  Polling.call(this, opts);
-	  this.requestTimeout = opts.requestTimeout;
-	  this.extraHeaders = opts.extraHeaders;
-
-	  if (typeof location !== 'undefined') {
-	    var isSSL = 'https:' === location.protocol;
-	    var port = location.port;
-
-	    // some user agents have empty `location.port`
-	    if (!port) {
-	      port = isSSL ? 443 : 80;
-	    }
-
-	    this.xd = (typeof location !== 'undefined' && opts.hostname !== location.hostname) ||
-	      port !== opts.port;
-	    this.xs = opts.secure !== isSSL;
-	  }
-	}
-
-	/**
-	 * Inherits from Polling.
-	 */
-
-	inherit(XHR, Polling);
-
-	/**
-	 * XHR supports binary
-	 */
-
-	XHR.prototype.supportsBinary = true;
-
-	/**
-	 * Creates a request.
-	 *
-	 * @param {String} method
-	 * @api private
-	 */
-
-	XHR.prototype.request = function (opts) {
-	  opts = opts || {};
-	  opts.uri = this.uri();
-	  opts.xd = this.xd;
-	  opts.xs = this.xs;
-	  opts.agent = this.agent || false;
-	  opts.supportsBinary = this.supportsBinary;
-	  opts.enablesXDR = this.enablesXDR;
-	  opts.withCredentials = this.withCredentials;
-
-	  // SSL options for Node.js client
-	  opts.pfx = this.pfx;
-	  opts.key = this.key;
-	  opts.passphrase = this.passphrase;
-	  opts.cert = this.cert;
-	  opts.ca = this.ca;
-	  opts.ciphers = this.ciphers;
-	  opts.rejectUnauthorized = this.rejectUnauthorized;
-	  opts.requestTimeout = this.requestTimeout;
-
-	  // other options for Node.js client
-	  opts.extraHeaders = this.extraHeaders;
-
-	  return new Request(opts);
-	};
-
-	/**
-	 * Sends data.
-	 *
-	 * @param {String} data to send.
-	 * @param {Function} called upon flush.
-	 * @api private
-	 */
-
-	XHR.prototype.doWrite = function (data, fn) {
-	  var isBinary = typeof data !== 'string' && data !== undefined;
-	  var req = this.request({ method: 'POST', data: data, isBinary: isBinary });
-	  var self = this;
-	  req.on('success', fn);
-	  req.on('error', function (err) {
-	    self.onError('xhr post error', err);
-	  });
-	  this.sendXhr = req;
-	};
-
-	/**
-	 * Starts a poll cycle.
-	 *
-	 * @api private
-	 */
-
-	XHR.prototype.doPoll = function () {
-	  debug('xhr poll');
-	  var req = this.request();
-	  var self = this;
-	  req.on('data', function (data) {
-	    self.onData(data);
-	  });
-	  req.on('error', function (err) {
-	    self.onError('xhr poll error', err);
-	  });
-	  this.pollXhr = req;
-	};
-
-	/**
-	 * Request constructor
-	 *
-	 * @param {Object} options
-	 * @api public
-	 */
-
-	function Request (opts) {
-	  this.method = opts.method || 'GET';
-	  this.uri = opts.uri;
-	  this.xd = !!opts.xd;
-	  this.xs = !!opts.xs;
-	  this.async = false !== opts.async;
-	  this.data = undefined !== opts.data ? opts.data : null;
-	  this.agent = opts.agent;
-	  this.isBinary = opts.isBinary;
-	  this.supportsBinary = opts.supportsBinary;
-	  this.enablesXDR = opts.enablesXDR;
-	  this.withCredentials = opts.withCredentials;
-	  this.requestTimeout = opts.requestTimeout;
-
-	  // SSL options for Node.js client
-	  this.pfx = opts.pfx;
-	  this.key = opts.key;
-	  this.passphrase = opts.passphrase;
-	  this.cert = opts.cert;
-	  this.ca = opts.ca;
-	  this.ciphers = opts.ciphers;
-	  this.rejectUnauthorized = opts.rejectUnauthorized;
-
-	  // other options for Node.js client
-	  this.extraHeaders = opts.extraHeaders;
-
-	  this.create();
-	}
-
-	/**
-	 * Mix in `Emitter`.
-	 */
-
-	Emitter(Request.prototype);
-
-	/**
-	 * Creates the XHR object and sends the request.
-	 *
-	 * @api private
-	 */
-
-	Request.prototype.create = function () {
-	  var opts = { agent: this.agent, xdomain: this.xd, xscheme: this.xs, enablesXDR: this.enablesXDR };
-
-	  // SSL options for Node.js client
-	  opts.pfx = this.pfx;
-	  opts.key = this.key;
-	  opts.passphrase = this.passphrase;
-	  opts.cert = this.cert;
-	  opts.ca = this.ca;
-	  opts.ciphers = this.ciphers;
-	  opts.rejectUnauthorized = this.rejectUnauthorized;
-
-	  var xhr = this.xhr = new XMLHttpRequest(opts);
-	  var self = this;
-
-	  try {
-	    debug('xhr open %s: %s', this.method, this.uri);
-	    xhr.open(this.method, this.uri, this.async);
-	    try {
-	      if (this.extraHeaders) {
-	        xhr.setDisableHeaderCheck && xhr.setDisableHeaderCheck(true);
-	        for (var i in this.extraHeaders) {
-	          if (this.extraHeaders.hasOwnProperty(i)) {
-	            xhr.setRequestHeader(i, this.extraHeaders[i]);
-	          }
-	        }
-	      }
-	    } catch (e) {}
-
-	    if ('POST' === this.method) {
-	      try {
-	        if (this.isBinary) {
-	          xhr.setRequestHeader('Content-type', 'application/octet-stream');
-	        } else {
-	          xhr.setRequestHeader('Content-type', 'text/plain;charset=UTF-8');
-	        }
-	      } catch (e) {}
-	    }
-
-	    try {
-	      xhr.setRequestHeader('Accept', '*/*');
-	    } catch (e) {}
-
-	    // ie6 check
-	    if ('withCredentials' in xhr) {
-	      xhr.withCredentials = this.withCredentials;
-	    }
-
-	    if (this.requestTimeout) {
-	      xhr.timeout = this.requestTimeout;
-	    }
-
-	    if (this.hasXDR()) {
-	      xhr.onload = function () {
-	        self.onLoad();
-	      };
-	      xhr.onerror = function () {
-	        self.onError(xhr.responseText);
-	      };
-	    } else {
-	      xhr.onreadystatechange = function () {
-	        if (xhr.readyState === 2) {
-	          try {
-	            var contentType = xhr.getResponseHeader('Content-Type');
-	            if (self.supportsBinary && contentType === 'application/octet-stream' || contentType === 'application/octet-stream; charset=UTF-8') {
-	              xhr.responseType = 'arraybuffer';
-	            }
-	          } catch (e) {}
-	        }
-	        if (4 !== xhr.readyState) return;
-	        if (200 === xhr.status || 1223 === xhr.status) {
-	          self.onLoad();
-	        } else {
-	          // make sure the `error` event handler that's user-set
-	          // does not throw in the same tick and gets caught here
-	          setTimeout(function () {
-	            self.onError(typeof xhr.status === 'number' ? xhr.status : 0);
-	          }, 0);
-	        }
-	      };
-	    }
-
-	    debug('xhr data %s', this.data);
-	    xhr.send(this.data);
-	  } catch (e) {
-	    // Need to defer since .create() is called directly fhrom the constructor
-	    // and thus the 'error' event can only be only bound *after* this exception
-	    // occurs.  Therefore, also, we cannot throw here at all.
-	    setTimeout(function () {
-	      self.onError(e);
-	    }, 0);
-	    return;
-	  }
-
-	  if (typeof document !== 'undefined') {
-	    this.index = Request.requestsCount++;
-	    Request.requests[this.index] = this;
-	  }
-	};
-
-	/**
-	 * Called upon successful response.
-	 *
-	 * @api private
-	 */
-
-	Request.prototype.onSuccess = function () {
-	  this.emit('success');
-	  this.cleanup();
-	};
-
-	/**
-	 * Called if we have data.
-	 *
-	 * @api private
-	 */
-
-	Request.prototype.onData = function (data) {
-	  this.emit('data', data);
-	  this.onSuccess();
-	};
-
-	/**
-	 * Called upon error.
-	 *
-	 * @api private
-	 */
-
-	Request.prototype.onError = function (err) {
-	  this.emit('error', err);
-	  this.cleanup(true);
-	};
-
-	/**
-	 * Cleans up house.
-	 *
-	 * @api private
-	 */
-
-	Request.prototype.cleanup = function (fromError) {
-	  if ('undefined' === typeof this.xhr || null === this.xhr) {
-	    return;
-	  }
-	  // xmlhttprequest
-	  if (this.hasXDR()) {
-	    this.xhr.onload = this.xhr.onerror = empty;
-	  } else {
-	    this.xhr.onreadystatechange = empty;
-	  }
-
-	  if (fromError) {
-	    try {
-	      this.xhr.abort();
-	    } catch (e) {}
-	  }
-
-	  if (typeof document !== 'undefined') {
-	    delete Request.requests[this.index];
-	  }
-
-	  this.xhr = null;
-	};
-
-	/**
-	 * Called upon load.
-	 *
-	 * @api private
-	 */
-
-	Request.prototype.onLoad = function () {
-	  var data;
-	  try {
-	    var contentType;
-	    try {
-	      contentType = this.xhr.getResponseHeader('Content-Type');
-	    } catch (e) {}
-	    if (contentType === 'application/octet-stream' || contentType === 'application/octet-stream; charset=UTF-8') {
-	      data = this.xhr.response || this.xhr.responseText;
-	    } else {
-	      data = this.xhr.responseText;
-	    }
-	  } catch (e) {
-	    this.onError(e);
-	  }
-	  if (null != data) {
-	    this.onData(data);
-	  }
-	};
-
-	/**
-	 * Check if it has XDomainRequest.
-	 *
-	 * @api private
-	 */
-
-	Request.prototype.hasXDR = function () {
-	  return typeof XDomainRequest !== 'undefined' && !this.xs && this.enablesXDR;
-	};
-
-	/**
-	 * Aborts the request.
-	 *
-	 * @api public
-	 */
-
-	Request.prototype.abort = function () {
-	  this.cleanup();
-	};
-
-	/**
-	 * Aborts pending requests when unloading the window. This is needed to prevent
-	 * memory leaks (e.g. when using IE) and to ensure that no spurious error is
-	 * emitted.
-	 */
-
-	Request.requestsCount = 0;
-	Request.requests = {};
-
-	if (typeof document !== 'undefined') {
-	  if (typeof attachEvent === 'function') {
-	    attachEvent('onunload', unloadHandler);
-	  } else if (typeof addEventListener === 'function') {
-	    var terminationEvent = 'onpagehide' in self ? 'pagehide' : 'unload';
-	    addEventListener(terminationEvent, unloadHandler, false);
-	  }
-	}
-
-	function unloadHandler () {
-	  for (var i in Request.requests) {
-	    if (Request.requests.hasOwnProperty(i)) {
-	      Request.requests[i].abort();
-	    }
-	  }
-	}
-
-
-/***/ },
-/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(7);
-	var parseqs = __webpack_require__(18);
-	var parser = __webpack_require__(8);
-	var inherit = __webpack_require__(19);
-	var yeast = __webpack_require__(20);
-	var debug = __webpack_require__(21)('engine.io-client:polling');
+	var Transport = __webpack_require__(4);
+	var parser = __webpack_require__(5);
+	var parseqs = __webpack_require__(15);
+	var inherit = __webpack_require__(16);
+	var yeast = __webpack_require__(17);
+
+	var BrowserWebSocket, NodeWebSocket;
+
+	if (typeof WebSocket !== "undefined") {
+	  BrowserWebSocket = WebSocket;
+	} else if (typeof self !== "undefined") {
+	  BrowserWebSocket = self.WebSocket || self.MozWebSocket;
+	}
+
+	if (typeof window === "undefined") {
+	  try {
+	    NodeWebSocket = __webpack_require__(18);
+	  } catch (e) {}
+	}
+
+	/**
+	 * Get either the `WebSocket` or `MozWebSocket` globals
+	 * in the browser or try to resolve WebSocket-compatible
+	 * interface exposed by `ws` for Node-like environment.
+	 */
+
+	var WebSocketImpl = BrowserWebSocket || NodeWebSocket;
 
 	/**
 	 * Module exports.
 	 */
 
-	module.exports = Polling;
+	module.exports = WS;
 
 	/**
-	 * Is XHR2 supported?
-	 */
-
-	var hasXHR2 = (function () {
-	  var XMLHttpRequest = __webpack_require__(3);
-	  var xhr = new XMLHttpRequest({ xdomain: false });
-	  return null != xhr.responseType;
-	})();
-
-	/**
-	 * Polling interface.
+	 * WebSocket transport constructor.
 	 *
-	 * @param {Object} opts
-	 * @api private
+	 * @api {Object} connection options
+	 * @api public
 	 */
 
-	function Polling (opts) {
-	  var forceBase64 = (opts && opts.forceBase64);
-	  if (!hasXHR2 || forceBase64) {
+	function WS(opts) {
+	  var forceBase64 = opts && opts.forceBase64;
+	  if (forceBase64) {
 	    this.supportsBinary = false;
+	  }
+	  this.perMessageDeflate = opts.perMessageDeflate;
+	  this.usingBrowserWebSocket = BrowserWebSocket && !opts.forceNode;
+	  this.protocols = opts.protocols;
+	  if (!this.usingBrowserWebSocket) {
+	    WebSocketImpl = NodeWebSocket;
 	  }
 	  Transport.call(this, opts);
 	}
@@ -1418,167 +915,186 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Inherits from Transport.
 	 */
 
-	inherit(Polling, Transport);
+	inherit(WS, Transport);
 
 	/**
 	 * Transport name.
-	 */
-
-	Polling.prototype.name = 'polling';
-
-	/**
-	 * Opens the socket (triggers polling). We write a PING message to determine
-	 * when the transport is open.
-	 *
-	 * @api private
-	 */
-
-	Polling.prototype.doOpen = function () {
-	  this.poll();
-	};
-
-	/**
-	 * Pauses polling.
-	 *
-	 * @param {Function} callback upon buffers are flushed and transport is paused
-	 * @api private
-	 */
-
-	Polling.prototype.pause = function (onPause) {
-	  var self = this;
-
-	  this.readyState = 'pausing';
-
-	  function pause () {
-	    debug('paused');
-	    self.readyState = 'paused';
-	    onPause();
-	  }
-
-	  if (this.polling || !this.writable) {
-	    var total = 0;
-
-	    if (this.polling) {
-	      debug('we are currently polling - waiting to pause');
-	      total++;
-	      this.once('pollComplete', function () {
-	        debug('pre-pause polling complete');
-	        --total || pause();
-	      });
-	    }
-
-	    if (!this.writable) {
-	      debug('we are currently writing - waiting to pause');
-	      total++;
-	      this.once('drain', function () {
-	        debug('pre-pause writing complete');
-	        --total || pause();
-	      });
-	    }
-	  } else {
-	    pause();
-	  }
-	};
-
-	/**
-	 * Starts polling cycle.
 	 *
 	 * @api public
 	 */
 
-	Polling.prototype.poll = function () {
-	  debug('polling');
-	  this.polling = true;
-	  this.doPoll();
-	  this.emit('poll');
-	};
+	WS.prototype.name = "websocket";
+
+	/*
+	 * WebSockets support binary
+	 */
+
+	WS.prototype.supportsBinary = true;
 
 	/**
-	 * Overloads onData to detect payloads.
+	 * Opens socket.
 	 *
 	 * @api private
 	 */
 
-	Polling.prototype.onData = function (data) {
-	  var self = this;
-	  debug('polling got data %s', data);
-	  var callback = function (packet, index, total) {
-	    // if its the first message we consider the transport open
-	    if ('opening' === self.readyState) {
-	      self.onOpen();
-	    }
+	WS.prototype.doOpen = function() {
+	  if (!this.check()) {
+	    // let probe timeout
+	    return;
+	  }
 
-	    // if its a close packet, we close the ongoing requests
-	    if ('close' === packet.type) {
-	      self.onClose();
-	      return false;
-	    }
-
-	    // otherwise bypass onData and handle the message
-	    self.onPacket(packet);
+	  var uri = this.uri();
+	  var protocols = this.protocols;
+	  var opts = {
+	    agent: this.agent,
+	    perMessageDeflate: this.perMessageDeflate
 	  };
 
-	  // decode payload
-	  parser.decodePayload(data, this.socket.binaryType, callback);
-
-	  // if an event did not trigger closing
-	  if ('closed' !== this.readyState) {
-	    // if we got data we're not polling
-	    this.polling = false;
-	    this.emit('pollComplete');
-
-	    if ('open' === this.readyState) {
-	      this.poll();
-	    } else {
-	      debug('ignoring poll - transport state "%s"', this.readyState);
-	    }
+	  // SSL options for Node.js client
+	  opts.pfx = this.pfx;
+	  opts.key = this.key;
+	  opts.passphrase = this.passphrase;
+	  opts.cert = this.cert;
+	  opts.ca = this.ca;
+	  opts.ciphers = this.ciphers;
+	  opts.rejectUnauthorized = this.rejectUnauthorized;
+	  if (this.extraHeaders) {
+	    opts.headers = this.extraHeaders;
 	  }
+	  if (this.localAddress) {
+	    opts.localAddress = this.localAddress;
+	  }
+
+	  try {
+	    this.ws =
+	      this.usingBrowserWebSocket && !this.isReactNative
+	        ? protocols
+	          ? new WebSocketImpl(uri, protocols)
+	          : new WebSocketImpl(uri)
+	        : new WebSocketImpl(uri, protocols, opts);
+	  } catch (err) {
+	    return this.emit("error", err);
+	  }
+
+	  if (this.ws.binaryType === undefined) {
+	    this.supportsBinary = false;
+	  }
+
+	  if (this.ws.supports && this.ws.supports.binary) {
+	    this.supportsBinary = true;
+	    this.ws.binaryType = "nodebuffer";
+	  } else {
+	    this.ws.binaryType = "arraybuffer";
+	  }
+
+	  this.addEventListeners();
 	};
 
 	/**
-	 * For polling, send a close packet.
+	 * Adds event listeners to the socket
 	 *
 	 * @api private
 	 */
 
-	Polling.prototype.doClose = function () {
+	WS.prototype.addEventListeners = function() {
 	  var self = this;
 
-	  function close () {
-	    debug('writing close packet');
-	    self.write([{ type: 'close' }]);
-	  }
-
-	  if ('open' === this.readyState) {
-	    debug('transport open - closing');
-	    close();
-	  } else {
-	    // in case we're trying to close while
-	    // handshaking is in progress (GH-164)
-	    debug('transport not open - deferring close');
-	    this.once('open', close);
-	  }
+	  this.ws.onopen = function() {
+	    self.onOpen();
+	  };
+	  this.ws.onclose = function() {
+	    self.onClose();
+	  };
+	  this.ws.onmessage = function(ev) {
+	    self.onData(ev.data);
+	  };
+	  this.ws.onerror = function(e) {
+	    self.onError("websocket error", e);
+	  };
 	};
 
 	/**
-	 * Writes a packets payload.
+	 * Writes data to socket.
 	 *
-	 * @param {Array} data packets
-	 * @param {Function} drain callback
+	 * @param {Array} array of packets.
 	 * @api private
 	 */
 
-	Polling.prototype.write = function (packets) {
+	WS.prototype.write = function(packets) {
 	  var self = this;
 	  this.writable = false;
-	  var callbackfn = function () {
-	    self.writable = true;
-	    self.emit('drain');
-	  };
 
-	  parser.encodePayload(packets, this.supportsBinary, function (data) {
-	    self.doWrite(data, callbackfn);
-	  });
+	  // encodePacket efficient as it uses WS framing
+	  // no need for encodePayload
+	  var total = packets.length;
+	  for (var i = 0, l = total; i < l; i++) {
+	    (function(packet) {
+	      parser.encodePacket(packet, self.supportsBinary, function(data) {
+	        if (!self.usingBrowserWebSocket) {
+	          // always create a new object (GH-437)
+	          var opts = {};
+	          if (packet.options) {
+	            opts.compress = packet.options.compress;
+	          }
+
+	          if (self.perMessageDeflate) {
+	            var len =
+	              "string" === typeof data ? Buffer.byteLength(data) : data.length;
+	            if (len < self.perMessageDeflate.threshold) {
+	              opts.compress = false;
+	            }
+	          }
+	        }
+
+	        // Sometimes the websocket has already been closed but the browser didn't
+	        // have a chance of informing us about it yet, in that case send will
+	        // throw an error
+	        try {
+	          if (self.usingBrowserWebSocket) {
+	            // TypeError is thrown when passing the second argument on Safari
+	            self.ws.send(data);
+	          } else {
+	            self.ws.send(data, opts);
+	          }
+	        } catch (e) {}
+
+	        --total || done();
+	      });
+	    })(packets[i]);
+	  }
+
+	  function done() {
+	    self.emit("flush");
+
+	    // fake drain
+	    // defer to next tick to allow Socket to clear writeBuffer
+	    setTimeout(function() {
+	      self.writable = true;
+	      self.emit("drain");
+	    }, 0);
+	  }
+	};
+
+	/**
+	 * Called upon close
+	 *
+	 * @api private
+	 */
+
+	WS.prototype.onClose = function() {
+	  Transport.prototype.onClose.call(this);
+	};
+
+	/**
+	 * Closes socket.
+	 *
+	 * @api private
+	 */
+
+	WS.prototype.doClose = function() {
+	  if (typeof this.ws !== "undefined") {
+	    this.ws.close();
+	  }
 	};
 
 	/**
@@ -1587,48 +1103,73 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api private
 	 */
 
-	Polling.prototype.uri = function () {
+	WS.prototype.uri = function() {
 	  var query = this.query || {};
-	  var schema = this.secure ? 'https' : 'http';
-	  var port = '';
+	  var schema = this.secure ? "wss" : "ws";
+	  var port = "";
 
-	  // cache busting is forced
-	  if (false !== this.timestampRequests) {
+	  // avoid port if default for schema
+	  if (
+	    this.port &&
+	    (("wss" === schema && Number(this.port) !== 443) ||
+	      ("ws" === schema && Number(this.port) !== 80))
+	  ) {
+	    port = ":" + this.port;
+	  }
+
+	  // append timestamp to URI
+	  if (this.timestampRequests) {
 	    query[this.timestampParam] = yeast();
 	  }
 
-	  if (!this.supportsBinary && !query.sid) {
+	  // communicate binary support capabilities
+	  if (!this.supportsBinary) {
 	    query.b64 = 1;
 	  }
 
 	  query = parseqs.encode(query);
 
-	  // avoid port if default for schema
-	  if (this.port && (('https' === schema && Number(this.port) !== 443) ||
-	     ('http' === schema && Number(this.port) !== 80))) {
-	    port = ':' + this.port;
-	  }
-
 	  // prepend ? to query
 	  if (query.length) {
-	    query = '?' + query;
+	    query = "?" + query;
 	  }
 
-	  var ipv6 = this.hostname.indexOf(':') !== -1;
-	  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
+	  var ipv6 = this.hostname.indexOf(":") !== -1;
+	  return (
+	    schema +
+	    "://" +
+	    (ipv6 ? "[" + this.hostname + "]" : this.hostname) +
+	    port +
+	    this.path +
+	    query
+	  );
+	};
+
+	/**
+	 * Feature detection for WebSocket.
+	 *
+	 * @return {Boolean} whether this transport is available.
+	 * @api public
+	 */
+
+	WS.prototype.check = function() {
+	  return (
+	    !!WebSocketImpl &&
+	    !("__initialize" in WebSocketImpl && this.name === WS.prototype.name)
+	  );
 	};
 
 
 /***/ },
-/* 7 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var parser = __webpack_require__(8);
-	var Emitter = __webpack_require__(17);
+	var parser = __webpack_require__(5);
+	var Emitter = __webpack_require__(14);
 
 	/**
 	 * Module exports.
@@ -1787,22 +1328,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 8 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var keys = __webpack_require__(9);
-	var hasBinary = __webpack_require__(10);
-	var sliceBuffer = __webpack_require__(12);
-	var after = __webpack_require__(13);
-	var utf8 = __webpack_require__(14);
+	var keys = __webpack_require__(6);
+	var hasBinary = __webpack_require__(7);
+	var sliceBuffer = __webpack_require__(9);
+	var after = __webpack_require__(10);
+	var utf8 = __webpack_require__(11);
 
 	var base64encoder;
 	if (typeof ArrayBuffer !== 'undefined') {
-	  base64encoder = __webpack_require__(15);
+	  base64encoder = __webpack_require__(12);
 	}
 
 	/**
@@ -1860,7 +1401,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Create a blob api even for blob builder when vendor prefixes exist
 	 */
 
-	var Blob = __webpack_require__(16);
+	var Blob = __webpack_require__(13);
 
 	/**
 	 * Encodes a packet.
@@ -2398,7 +1939,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
+/* 6 */
 /***/ function(module, exports) {
 
 	
@@ -2423,7 +1964,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 10 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* global Blob File */
@@ -2432,7 +1973,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Module requirements.
 	 */
 
-	var isArray = __webpack_require__(11);
+	var isArray = __webpack_require__(8);
 
 	var toString = Object.prototype.toString;
 	var withNativeBlob = typeof Blob === 'function' ||
@@ -2493,7 +2034,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
+/* 8 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -2504,7 +2045,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 12 */
+/* 9 */
 /***/ function(module, exports) {
 
 	/**
@@ -2539,7 +2080,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 13 */
+/* 10 */
 /***/ function(module, exports) {
 
 	module.exports = after
@@ -2573,7 +2114,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 14 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/*! https://mths.be/utf8js v2.1.2 by @mathias */
@@ -2789,7 +2330,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 15 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/*
@@ -2862,7 +2403,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 16 */
+/* 13 */
 /***/ function(module, exports) {
 
 	/**
@@ -2968,7 +2509,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 17 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -3137,7 +2678,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 18 */
+/* 15 */
 /***/ function(module, exports) {
 
 	/**
@@ -3180,7 +2721,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 19 */
+/* 16 */
 /***/ function(module, exports) {
 
 	
@@ -3192,7 +2733,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 20 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3266,1400 +2807,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	/* eslint-env browser */
-
-	/**
-	 * This is the web browser implementation of `debug()`.
-	 */
-
-	exports.log = log;
-	exports.formatArgs = formatArgs;
-	exports.save = save;
-	exports.load = load;
-	exports.useColors = useColors;
-	exports.storage = localstorage();
-
-	/**
-	 * Colors.
-	 */
-
-	exports.colors = ['#0000CC', '#0000FF', '#0033CC', '#0033FF', '#0066CC', '#0066FF', '#0099CC', '#0099FF', '#00CC00', '#00CC33', '#00CC66', '#00CC99', '#00CCCC', '#00CCFF', '#3300CC', '#3300FF', '#3333CC', '#3333FF', '#3366CC', '#3366FF', '#3399CC', '#3399FF', '#33CC00', '#33CC33', '#33CC66', '#33CC99', '#33CCCC', '#33CCFF', '#6600CC', '#6600FF', '#6633CC', '#6633FF', '#66CC00', '#66CC33', '#9900CC', '#9900FF', '#9933CC', '#9933FF', '#99CC00', '#99CC33', '#CC0000', '#CC0033', '#CC0066', '#CC0099', '#CC00CC', '#CC00FF', '#CC3300', '#CC3333', '#CC3366', '#CC3399', '#CC33CC', '#CC33FF', '#CC6600', '#CC6633', '#CC9900', '#CC9933', '#CCCC00', '#CCCC33', '#FF0000', '#FF0033', '#FF0066', '#FF0099', '#FF00CC', '#FF00FF', '#FF3300', '#FF3333', '#FF3366', '#FF3399', '#FF33CC', '#FF33FF', '#FF6600', '#FF6633', '#FF9900', '#FF9933', '#FFCC00', '#FFCC33'];
-
-	/**
-	 * Currently only WebKit-based Web Inspectors, Firefox >= v31,
-	 * and the Firebug extension (any Firefox version) are known
-	 * to support "%c" CSS customizations.
-	 *
-	 * TODO: add a `localStorage` variable to explicitly enable/disable colors
-	 */
-
-	// eslint-disable-next-line complexity
-	function useColors() {
-		// NB: In an Electron preload script, document will be defined but not fully
-		// initialized. Since we know we're in Chrome, we'll just detect this case
-		// explicitly
-		if (typeof window !== 'undefined' && window.process && (window.process.type === 'renderer' || window.process.__nwjs)) {
-			return true;
-		}
-
-		// Internet Explorer and Edge do not support colors.
-		if (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) {
-			return false;
-		}
-
-		// Is webkit? http://stackoverflow.com/a/16459606/376773
-		// document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
-		return typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance ||
-		// Is firebug? http://stackoverflow.com/a/398120/376773
-		typeof window !== 'undefined' && window.console && (window.console.firebug || window.console.exception && window.console.table) ||
-		// Is firefox >= v31?
-		// https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-		typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31 ||
-		// Double check webkit in userAgent just in case we are in a worker
-		typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
-	}
-
-	/**
-	 * Colorize log arguments if enabled.
-	 *
-	 * @api public
-	 */
-
-	function formatArgs(args) {
-		args[0] = (this.useColors ? '%c' : '') + this.namespace + (this.useColors ? ' %c' : ' ') + args[0] + (this.useColors ? '%c ' : ' ') + '+' + module.exports.humanize(this.diff);
-
-		if (!this.useColors) {
-			return;
-		}
-
-		var c = 'color: ' + this.color;
-		args.splice(1, 0, c, 'color: inherit');
-
-		// The final "%c" is somewhat tricky, because there could be other
-		// arguments passed either before or after the %c, so we need to
-		// figure out the correct index to insert the CSS into
-		var index = 0;
-		var lastC = 0;
-		args[0].replace(/%[a-zA-Z%]/g, function (match) {
-			if (match === '%%') {
-				return;
-			}
-			index++;
-			if (match === '%c') {
-				// We only are interested in the *last* %c
-				// (the user may have provided their own)
-				lastC = index;
-			}
-		});
-
-		args.splice(lastC, 0, c);
-	}
-
-	/**
-	 * Invokes `console.log()` when available.
-	 * No-op when `console.log` is not a "function".
-	 *
-	 * @api public
-	 */
-	function log() {
-		var _console;
-
-		// This hackery is required for IE8/9, where
-		// the `console.log` function doesn't have 'apply'
-		return (typeof console === 'undefined' ? 'undefined' : _typeof(console)) === 'object' && console.log && (_console = console).log.apply(_console, arguments);
-	}
-
-	/**
-	 * Save `namespaces`.
-	 *
-	 * @param {String} namespaces
-	 * @api private
-	 */
-	function save(namespaces) {
-		try {
-			if (namespaces) {
-				exports.storage.setItem('debug', namespaces);
-			} else {
-				exports.storage.removeItem('debug');
-			}
-		} catch (error) {
-			// Swallow
-			// XXX (@Qix-) should we be logging these?
-		}
-	}
-
-	/**
-	 * Load `namespaces`.
-	 *
-	 * @return {String} returns the previously persisted debug modes
-	 * @api private
-	 */
-	function load() {
-		var r = void 0;
-		try {
-			r = exports.storage.getItem('debug');
-		} catch (error) {}
-		// Swallow
-		// XXX (@Qix-) should we be logging these?
-
-
-		// If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-		if (!r && typeof process !== 'undefined' && 'env' in process) {
-			r = process.env.DEBUG;
-		}
-
-		return r;
-	}
-
-	/**
-	 * Localstorage attempts to return the localstorage.
-	 *
-	 * This is necessary because safari throws
-	 * when a user disables cookies/localstorage
-	 * and you attempt to access it.
-	 *
-	 * @return {LocalStorage}
-	 * @api private
-	 */
-
-	function localstorage() {
-		try {
-			// TVMLKit (Apple TV JS Runtime) does not have a window object, just localStorage in the global context
-			// The Browser also has localStorage in the global context.
-			return localStorage;
-		} catch (error) {
-			// Swallow
-			// XXX (@Qix-) should we be logging these?
-		}
-	}
-
-	module.exports = __webpack_require__(23)(exports);
-
-	var formatters = module.exports.formatters;
-
-	/**
-	 * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
-	 */
-
-	formatters.j = function (v) {
-		try {
-			return JSON.stringify(v);
-		} catch (error) {
-			return '[UnexpectedJSONParseError]: ' + error.message;
-		}
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)))
-
-/***/ },
-/* 22 */
-/***/ function(module, exports) {
-
-	// shim for using process in browser
-	var process = module.exports = {};
-
-	// cached from whatever global is present so that test runners that stub it
-	// don't break things.  But we need to wrap it in a try catch in case it is
-	// wrapped in strict mode code which doesn't define any globals.  It's inside a
-	// function because try/catches deoptimize in certain engines.
-
-	var cachedSetTimeout;
-	var cachedClearTimeout;
-
-	function defaultSetTimout() {
-	    throw new Error('setTimeout has not been defined');
-	}
-	function defaultClearTimeout () {
-	    throw new Error('clearTimeout has not been defined');
-	}
-	(function () {
-	    try {
-	        if (typeof setTimeout === 'function') {
-	            cachedSetTimeout = setTimeout;
-	        } else {
-	            cachedSetTimeout = defaultSetTimout;
-	        }
-	    } catch (e) {
-	        cachedSetTimeout = defaultSetTimout;
-	    }
-	    try {
-	        if (typeof clearTimeout === 'function') {
-	            cachedClearTimeout = clearTimeout;
-	        } else {
-	            cachedClearTimeout = defaultClearTimeout;
-	        }
-	    } catch (e) {
-	        cachedClearTimeout = defaultClearTimeout;
-	    }
-	} ())
-	function runTimeout(fun) {
-	    if (cachedSetTimeout === setTimeout) {
-	        //normal enviroments in sane situations
-	        return setTimeout(fun, 0);
-	    }
-	    // if setTimeout wasn't available but was latter defined
-	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-	        cachedSetTimeout = setTimeout;
-	        return setTimeout(fun, 0);
-	    }
-	    try {
-	        // when when somebody has screwed with setTimeout but no I.E. maddness
-	        return cachedSetTimeout(fun, 0);
-	    } catch(e){
-	        try {
-	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-	            return cachedSetTimeout.call(null, fun, 0);
-	        } catch(e){
-	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-	            return cachedSetTimeout.call(this, fun, 0);
-	        }
-	    }
-
-
-	}
-	function runClearTimeout(marker) {
-	    if (cachedClearTimeout === clearTimeout) {
-	        //normal enviroments in sane situations
-	        return clearTimeout(marker);
-	    }
-	    // if clearTimeout wasn't available but was latter defined
-	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-	        cachedClearTimeout = clearTimeout;
-	        return clearTimeout(marker);
-	    }
-	    try {
-	        // when when somebody has screwed with setTimeout but no I.E. maddness
-	        return cachedClearTimeout(marker);
-	    } catch (e){
-	        try {
-	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-	            return cachedClearTimeout.call(null, marker);
-	        } catch (e){
-	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-	            return cachedClearTimeout.call(this, marker);
-	        }
-	    }
-
-
-
-	}
-	var queue = [];
-	var draining = false;
-	var currentQueue;
-	var queueIndex = -1;
-
-	function cleanUpNextTick() {
-	    if (!draining || !currentQueue) {
-	        return;
-	    }
-	    draining = false;
-	    if (currentQueue.length) {
-	        queue = currentQueue.concat(queue);
-	    } else {
-	        queueIndex = -1;
-	    }
-	    if (queue.length) {
-	        drainQueue();
-	    }
-	}
-
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    var timeout = runTimeout(cleanUpNextTick);
-	    draining = true;
-
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        while (++queueIndex < len) {
-	            if (currentQueue) {
-	                currentQueue[queueIndex].run();
-	            }
-	        }
-	        queueIndex = -1;
-	        len = queue.length;
-	    }
-	    currentQueue = null;
-	    draining = false;
-	    runClearTimeout(timeout);
-	}
-
-	process.nextTick = function (fun) {
-	    var args = new Array(arguments.length - 1);
-	    if (arguments.length > 1) {
-	        for (var i = 1; i < arguments.length; i++) {
-	            args[i - 1] = arguments[i];
-	        }
-	    }
-	    queue.push(new Item(fun, args));
-	    if (queue.length === 1 && !draining) {
-	        runTimeout(drainQueue);
-	    }
-	};
-
-	// v8 likes predictible objects
-	function Item(fun, array) {
-	    this.fun = fun;
-	    this.array = array;
-	}
-	Item.prototype.run = function () {
-	    this.fun.apply(null, this.array);
-	};
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-
-	function noop() {}
-
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-	process.prependListener = noop;
-	process.prependOnceListener = noop;
-
-	process.listeners = function (name) { return [] }
-
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
-
-
-/***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	/**
-	 * This is the common logic for both the Node.js and web browser
-	 * implementations of `debug()`.
-	 */
-
-	function setup(env) {
-		createDebug.debug = createDebug;
-		createDebug.default = createDebug;
-		createDebug.coerce = coerce;
-		createDebug.disable = disable;
-		createDebug.enable = enable;
-		createDebug.enabled = enabled;
-		createDebug.humanize = __webpack_require__(24);
-
-		Object.keys(env).forEach(function (key) {
-			createDebug[key] = env[key];
-		});
-
-		/**
-	 * Active `debug` instances.
-	 */
-		createDebug.instances = [];
-
-		/**
-	 * The currently active debug mode names, and names to skip.
-	 */
-
-		createDebug.names = [];
-		createDebug.skips = [];
-
-		/**
-	 * Map of special "%n" handling functions, for the debug "format" argument.
-	 *
-	 * Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
-	 */
-		createDebug.formatters = {};
-
-		/**
-	 * Selects a color for a debug namespace
-	 * @param {String} namespace The namespace string for the for the debug instance to be colored
-	 * @return {Number|String} An ANSI color code for the given namespace
-	 * @api private
-	 */
-		function selectColor(namespace) {
-			var hash = 0;
-
-			for (var i = 0; i < namespace.length; i++) {
-				hash = (hash << 5) - hash + namespace.charCodeAt(i);
-				hash |= 0; // Convert to 32bit integer
-			}
-
-			return createDebug.colors[Math.abs(hash) % createDebug.colors.length];
-		}
-		createDebug.selectColor = selectColor;
-
-		/**
-	 * Create a debugger with the given `namespace`.
-	 *
-	 * @param {String} namespace
-	 * @return {Function}
-	 * @api public
-	 */
-		function createDebug(namespace) {
-			var prevTime = void 0;
-
-			function debug() {
-				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-					args[_key] = arguments[_key];
-				}
-
-				// Disabled?
-				if (!debug.enabled) {
-					return;
-				}
-
-				var self = debug;
-
-				// Set `diff` timestamp
-				var curr = Number(new Date());
-				var ms = curr - (prevTime || curr);
-				self.diff = ms;
-				self.prev = prevTime;
-				self.curr = curr;
-				prevTime = curr;
-
-				args[0] = createDebug.coerce(args[0]);
-
-				if (typeof args[0] !== 'string') {
-					// Anything else let's inspect with %O
-					args.unshift('%O');
-				}
-
-				// Apply any `formatters` transformations
-				var index = 0;
-				args[0] = args[0].replace(/%([a-zA-Z%])/g, function (match, format) {
-					// If we encounter an escaped % then don't increase the array index
-					if (match === '%%') {
-						return match;
-					}
-					index++;
-					var formatter = createDebug.formatters[format];
-					if (typeof formatter === 'function') {
-						var val = args[index];
-						match = formatter.call(self, val);
-
-						// Now we need to remove `args[index]` since it's inlined in the `format`
-						args.splice(index, 1);
-						index--;
-					}
-					return match;
-				});
-
-				// Apply env-specific formatting (colors, etc.)
-				createDebug.formatArgs.call(self, args);
-
-				var logFn = self.log || createDebug.log;
-				logFn.apply(self, args);
-			}
-
-			debug.namespace = namespace;
-			debug.enabled = createDebug.enabled(namespace);
-			debug.useColors = createDebug.useColors();
-			debug.color = selectColor(namespace);
-			debug.destroy = destroy;
-			debug.extend = extend;
-			// Debug.formatArgs = formatArgs;
-			// debug.rawLog = rawLog;
-
-			// env-specific initialization logic for debug instances
-			if (typeof createDebug.init === 'function') {
-				createDebug.init(debug);
-			}
-
-			createDebug.instances.push(debug);
-
-			return debug;
-		}
-
-		function destroy() {
-			var index = createDebug.instances.indexOf(this);
-			if (index !== -1) {
-				createDebug.instances.splice(index, 1);
-				return true;
-			}
-			return false;
-		}
-
-		function extend(namespace, delimiter) {
-			var newDebug = createDebug(this.namespace + (typeof delimiter === 'undefined' ? ':' : delimiter) + namespace);
-			newDebug.log = this.log;
-			return newDebug;
-		}
-
-		/**
-	 * Enables a debug mode by namespaces. This can include modes
-	 * separated by a colon and wildcards.
-	 *
-	 * @param {String} namespaces
-	 * @api public
-	 */
-		function enable(namespaces) {
-			createDebug.save(namespaces);
-
-			createDebug.names = [];
-			createDebug.skips = [];
-
-			var i = void 0;
-			var split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
-			var len = split.length;
-
-			for (i = 0; i < len; i++) {
-				if (!split[i]) {
-					// ignore empty strings
-					continue;
-				}
-
-				namespaces = split[i].replace(/\*/g, '.*?');
-
-				if (namespaces[0] === '-') {
-					createDebug.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
-				} else {
-					createDebug.names.push(new RegExp('^' + namespaces + '$'));
-				}
-			}
-
-			for (i = 0; i < createDebug.instances.length; i++) {
-				var instance = createDebug.instances[i];
-				instance.enabled = createDebug.enabled(instance.namespace);
-			}
-		}
-
-		/**
-	 * Disable debug output.
-	 *
-	 * @return {String} namespaces
-	 * @api public
-	 */
-		function disable() {
-			var namespaces = [].concat(_toConsumableArray(createDebug.names.map(toNamespace)), _toConsumableArray(createDebug.skips.map(toNamespace).map(function (namespace) {
-				return '-' + namespace;
-			}))).join(',');
-			createDebug.enable('');
-			return namespaces;
-		}
-
-		/**
-	 * Returns true if the given mode name is enabled, false otherwise.
-	 *
-	 * @param {String} name
-	 * @return {Boolean}
-	 * @api public
-	 */
-		function enabled(name) {
-			if (name[name.length - 1] === '*') {
-				return true;
-			}
-
-			var i = void 0;
-			var len = void 0;
-
-			for (i = 0, len = createDebug.skips.length; i < len; i++) {
-				if (createDebug.skips[i].test(name)) {
-					return false;
-				}
-			}
-
-			for (i = 0, len = createDebug.names.length; i < len; i++) {
-				if (createDebug.names[i].test(name)) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		/**
-	 * Convert regexp to namespace
-	 *
-	 * @param {RegExp} regxep
-	 * @return {String} namespace
-	 * @api private
-	 */
-		function toNamespace(regexp) {
-			return regexp.toString().substring(2, regexp.toString().length - 2).replace(/\.\*\?$/, '*');
-		}
-
-		/**
-	 * Coerce `val`.
-	 *
-	 * @param {Mixed} val
-	 * @return {Mixed}
-	 * @api private
-	 */
-		function coerce(val) {
-			if (val instanceof Error) {
-				return val.stack || val.message;
-			}
-			return val;
-		}
-
-		createDebug.enable(createDebug.load());
-
-		return createDebug;
-	}
-
-	module.exports = setup;
-
-/***/ },
-/* 24 */
-/***/ function(module, exports) {
-
-	/**
-	 * Helpers.
-	 */
-
-	var s = 1000;
-	var m = s * 60;
-	var h = m * 60;
-	var d = h * 24;
-	var w = d * 7;
-	var y = d * 365.25;
-
-	/**
-	 * Parse or format the given `val`.
-	 *
-	 * Options:
-	 *
-	 *  - `long` verbose formatting [false]
-	 *
-	 * @param {String|Number} val
-	 * @param {Object} [options]
-	 * @throws {Error} throw an error if val is not a non-empty string or a number
-	 * @return {String|Number}
-	 * @api public
-	 */
-
-	module.exports = function(val, options) {
-	  options = options || {};
-	  var type = typeof val;
-	  if (type === 'string' && val.length > 0) {
-	    return parse(val);
-	  } else if (type === 'number' && isFinite(val)) {
-	    return options.long ? fmtLong(val) : fmtShort(val);
-	  }
-	  throw new Error(
-	    'val is not a non-empty string or a valid number. val=' +
-	      JSON.stringify(val)
-	  );
-	};
-
-	/**
-	 * Parse the given `str` and return milliseconds.
-	 *
-	 * @param {String} str
-	 * @return {Number}
-	 * @api private
-	 */
-
-	function parse(str) {
-	  str = String(str);
-	  if (str.length > 100) {
-	    return;
-	  }
-	  var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
-	    str
-	  );
-	  if (!match) {
-	    return;
-	  }
-	  var n = parseFloat(match[1]);
-	  var type = (match[2] || 'ms').toLowerCase();
-	  switch (type) {
-	    case 'years':
-	    case 'year':
-	    case 'yrs':
-	    case 'yr':
-	    case 'y':
-	      return n * y;
-	    case 'weeks':
-	    case 'week':
-	    case 'w':
-	      return n * w;
-	    case 'days':
-	    case 'day':
-	    case 'd':
-	      return n * d;
-	    case 'hours':
-	    case 'hour':
-	    case 'hrs':
-	    case 'hr':
-	    case 'h':
-	      return n * h;
-	    case 'minutes':
-	    case 'minute':
-	    case 'mins':
-	    case 'min':
-	    case 'm':
-	      return n * m;
-	    case 'seconds':
-	    case 'second':
-	    case 'secs':
-	    case 'sec':
-	    case 's':
-	      return n * s;
-	    case 'milliseconds':
-	    case 'millisecond':
-	    case 'msecs':
-	    case 'msec':
-	    case 'ms':
-	      return n;
-	    default:
-	      return undefined;
-	  }
-	}
-
-	/**
-	 * Short format for `ms`.
-	 *
-	 * @param {Number} ms
-	 * @return {String}
-	 * @api private
-	 */
-
-	function fmtShort(ms) {
-	  var msAbs = Math.abs(ms);
-	  if (msAbs >= d) {
-	    return Math.round(ms / d) + 'd';
-	  }
-	  if (msAbs >= h) {
-	    return Math.round(ms / h) + 'h';
-	  }
-	  if (msAbs >= m) {
-	    return Math.round(ms / m) + 'm';
-	  }
-	  if (msAbs >= s) {
-	    return Math.round(ms / s) + 's';
-	  }
-	  return ms + 'ms';
-	}
-
-	/**
-	 * Long format for `ms`.
-	 *
-	 * @param {Number} ms
-	 * @return {String}
-	 * @api private
-	 */
-
-	function fmtLong(ms) {
-	  var msAbs = Math.abs(ms);
-	  if (msAbs >= d) {
-	    return plural(ms, msAbs, d, 'day');
-	  }
-	  if (msAbs >= h) {
-	    return plural(ms, msAbs, h, 'hour');
-	  }
-	  if (msAbs >= m) {
-	    return plural(ms, msAbs, m, 'minute');
-	  }
-	  if (msAbs >= s) {
-	    return plural(ms, msAbs, s, 'second');
-	  }
-	  return ms + ' ms';
-	}
-
-	/**
-	 * Pluralization helper.
-	 */
-
-	function plural(ms, msAbs, n, name) {
-	  var isPlural = msAbs >= n * 1.5;
-	  return Math.round(ms / n) + ' ' + name + (isPlural ? 's' : '');
-	}
-
-
-/***/ },
-/* 25 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * Module requirements.
-	 */
-
-	var Polling = __webpack_require__(6);
-	var inherit = __webpack_require__(19);
-
-	/**
-	 * Module exports.
-	 */
-
-	module.exports = JSONPPolling;
-
-	/**
-	 * Cached regular expressions.
-	 */
-
-	var rNewline = /\n/g;
-	var rEscapedNewline = /\\n/g;
-
-	/**
-	 * Global JSONP callbacks.
-	 */
-
-	var callbacks;
-
-	/**
-	 * Noop.
-	 */
-
-	function empty () { }
-
-	/**
-	 * Until https://github.com/tc39/proposal-global is shipped.
-	 */
-	function glob () {
-	  return typeof self !== 'undefined' ? self
-	      : typeof window !== 'undefined' ? window
-	      : typeof global !== 'undefined' ? global : {};
-	}
-
-	/**
-	 * JSONP Polling constructor.
-	 *
-	 * @param {Object} opts.
-	 * @api public
-	 */
-
-	function JSONPPolling (opts) {
-	  Polling.call(this, opts);
-
-	  this.query = this.query || {};
-
-	  // define global callbacks array if not present
-	  // we do this here (lazily) to avoid unneeded global pollution
-	  if (!callbacks) {
-	    // we need to consider multiple engines in the same page
-	    var global = glob();
-	    callbacks = global.___eio = (global.___eio || []);
-	  }
-
-	  // callback identifier
-	  this.index = callbacks.length;
-
-	  // add callback to jsonp global
-	  var self = this;
-	  callbacks.push(function (msg) {
-	    self.onData(msg);
-	  });
-
-	  // append to query string
-	  this.query.j = this.index;
-
-	  // prevent spurious errors from being emitted when the window is unloaded
-	  if (typeof addEventListener === 'function') {
-	    addEventListener('beforeunload', function () {
-	      if (self.script) self.script.onerror = empty;
-	    }, false);
-	  }
-	}
-
-	/**
-	 * Inherits from Polling.
-	 */
-
-	inherit(JSONPPolling, Polling);
-
-	/*
-	 * JSONP only supports binary as base64 encoded strings
-	 */
-
-	JSONPPolling.prototype.supportsBinary = false;
-
-	/**
-	 * Closes the socket.
-	 *
-	 * @api private
-	 */
-
-	JSONPPolling.prototype.doClose = function () {
-	  if (this.script) {
-	    this.script.parentNode.removeChild(this.script);
-	    this.script = null;
-	  }
-
-	  if (this.form) {
-	    this.form.parentNode.removeChild(this.form);
-	    this.form = null;
-	    this.iframe = null;
-	  }
-
-	  Polling.prototype.doClose.call(this);
-	};
-
-	/**
-	 * Starts a poll cycle.
-	 *
-	 * @api private
-	 */
-
-	JSONPPolling.prototype.doPoll = function () {
-	  var self = this;
-	  var script = document.createElement('script');
-
-	  if (this.script) {
-	    this.script.parentNode.removeChild(this.script);
-	    this.script = null;
-	  }
-
-	  script.async = true;
-	  script.src = this.uri();
-	  script.onerror = function (e) {
-	    self.onError('jsonp poll error', e);
-	  };
-
-	  var insertAt = document.getElementsByTagName('script')[0];
-	  if (insertAt) {
-	    insertAt.parentNode.insertBefore(script, insertAt);
-	  } else {
-	    (document.head || document.body).appendChild(script);
-	  }
-	  this.script = script;
-
-	  var isUAgecko = 'undefined' !== typeof navigator && /gecko/i.test(navigator.userAgent);
-
-	  if (isUAgecko) {
-	    setTimeout(function () {
-	      var iframe = document.createElement('iframe');
-	      document.body.appendChild(iframe);
-	      document.body.removeChild(iframe);
-	    }, 100);
-	  }
-	};
-
-	/**
-	 * Writes with a hidden iframe.
-	 *
-	 * @param {String} data to send
-	 * @param {Function} called upon flush.
-	 * @api private
-	 */
-
-	JSONPPolling.prototype.doWrite = function (data, fn) {
-	  var self = this;
-
-	  if (!this.form) {
-	    var form = document.createElement('form');
-	    var area = document.createElement('textarea');
-	    var id = this.iframeId = 'eio_iframe_' + this.index;
-	    var iframe;
-
-	    form.className = 'socketio';
-	    form.style.position = 'absolute';
-	    form.style.top = '-1000px';
-	    form.style.left = '-1000px';
-	    form.target = id;
-	    form.method = 'POST';
-	    form.setAttribute('accept-charset', 'utf-8');
-	    area.name = 'd';
-	    form.appendChild(area);
-	    document.body.appendChild(form);
-
-	    this.form = form;
-	    this.area = area;
-	  }
-
-	  this.form.action = this.uri();
-
-	  function complete () {
-	    initIframe();
-	    fn();
-	  }
-
-	  function initIframe () {
-	    if (self.iframe) {
-	      try {
-	        self.form.removeChild(self.iframe);
-	      } catch (e) {
-	        self.onError('jsonp polling iframe removal error', e);
-	      }
-	    }
-
-	    try {
-	      // ie6 dynamic iframes with target="" support (thanks Chris Lambacher)
-	      var html = '<iframe src="javascript:0" name="' + self.iframeId + '">';
-	      iframe = document.createElement(html);
-	    } catch (e) {
-	      iframe = document.createElement('iframe');
-	      iframe.name = self.iframeId;
-	      iframe.src = 'javascript:0';
-	    }
-
-	    iframe.id = self.iframeId;
-
-	    self.form.appendChild(iframe);
-	    self.iframe = iframe;
-	  }
-
-	  initIframe();
-
-	  // escape \n to prevent it from being converted into \r\n by some UAs
-	  // double escaping is required for escaped new lines because unescaping of new lines can be done safely on server-side
-	  data = data.replace(rEscapedNewline, '\\\n');
-	  this.area.value = data.replace(rNewline, '\\n');
-
-	  try {
-	    this.form.submit();
-	  } catch (e) {}
-
-	  if (this.iframe.attachEvent) {
-	    this.iframe.onreadystatechange = function () {
-	      if (self.iframe.readyState === 'complete') {
-	        complete();
-	      }
-	    };
-	  } else {
-	    this.iframe.onload = complete;
-	  }
-	};
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module dependencies.
-	 */
-
-	var Transport = __webpack_require__(7);
-	var parser = __webpack_require__(8);
-	var parseqs = __webpack_require__(18);
-	var inherit = __webpack_require__(19);
-	var yeast = __webpack_require__(20);
-	var debug = __webpack_require__(21)('engine.io-client:websocket');
-
-	var BrowserWebSocket, NodeWebSocket;
-
-	if (typeof WebSocket !== 'undefined') {
-	  BrowserWebSocket = WebSocket;
-	} else if (typeof self !== 'undefined') {
-	  BrowserWebSocket = self.WebSocket || self.MozWebSocket;
-	}
-
-	if (typeof window === 'undefined') {
-	  try {
-	    NodeWebSocket = __webpack_require__(27);
-	  } catch (e) { }
-	}
-
-	/**
-	 * Get either the `WebSocket` or `MozWebSocket` globals
-	 * in the browser or try to resolve WebSocket-compatible
-	 * interface exposed by `ws` for Node-like environment.
-	 */
-
-	var WebSocketImpl = BrowserWebSocket || NodeWebSocket;
-
-	/**
-	 * Module exports.
-	 */
-
-	module.exports = WS;
-
-	/**
-	 * WebSocket transport constructor.
-	 *
-	 * @api {Object} connection options
-	 * @api public
-	 */
-
-	function WS (opts) {
-	  var forceBase64 = (opts && opts.forceBase64);
-	  if (forceBase64) {
-	    this.supportsBinary = false;
-	  }
-	  this.perMessageDeflate = opts.perMessageDeflate;
-	  this.usingBrowserWebSocket = BrowserWebSocket && !opts.forceNode;
-	  this.protocols = opts.protocols;
-	  if (!this.usingBrowserWebSocket) {
-	    WebSocketImpl = NodeWebSocket;
-	  }
-	  Transport.call(this, opts);
-	}
-
-	/**
-	 * Inherits from Transport.
-	 */
-
-	inherit(WS, Transport);
-
-	/**
-	 * Transport name.
-	 *
-	 * @api public
-	 */
-
-	WS.prototype.name = 'websocket';
-
-	/*
-	 * WebSockets support binary
-	 */
-
-	WS.prototype.supportsBinary = true;
-
-	/**
-	 * Opens socket.
-	 *
-	 * @api private
-	 */
-
-	WS.prototype.doOpen = function () {
-	  if (!this.check()) {
-	    // let probe timeout
-	    return;
-	  }
-
-	  var uri = this.uri();
-	  var protocols = this.protocols;
-	  var opts = {
-	    agent: this.agent,
-	    perMessageDeflate: this.perMessageDeflate
-	  };
-
-	  // SSL options for Node.js client
-	  opts.pfx = this.pfx;
-	  opts.key = this.key;
-	  opts.passphrase = this.passphrase;
-	  opts.cert = this.cert;
-	  opts.ca = this.ca;
-	  opts.ciphers = this.ciphers;
-	  opts.rejectUnauthorized = this.rejectUnauthorized;
-	  if (this.extraHeaders) {
-	    opts.headers = this.extraHeaders;
-	  }
-	  if (this.localAddress) {
-	    opts.localAddress = this.localAddress;
-	  }
-
-	  try {
-	    this.ws =
-	      this.usingBrowserWebSocket && !this.isReactNative
-	        ? protocols
-	          ? new WebSocketImpl(uri, protocols)
-	          : new WebSocketImpl(uri)
-	        : new WebSocketImpl(uri, protocols, opts);
-	  } catch (err) {
-	    return this.emit('error', err);
-	  }
-
-	  if (this.ws.binaryType === undefined) {
-	    this.supportsBinary = false;
-	  }
-
-	  if (this.ws.supports && this.ws.supports.binary) {
-	    this.supportsBinary = true;
-	    this.ws.binaryType = 'nodebuffer';
-	  } else {
-	    this.ws.binaryType = 'arraybuffer';
-	  }
-
-	  this.addEventListeners();
-	};
-
-	/**
-	 * Adds event listeners to the socket
-	 *
-	 * @api private
-	 */
-
-	WS.prototype.addEventListeners = function () {
-	  var self = this;
-
-	  this.ws.onopen = function () {
-	    self.onOpen();
-	  };
-	  this.ws.onclose = function () {
-	    self.onClose();
-	  };
-	  this.ws.onmessage = function (ev) {
-	    self.onData(ev.data);
-	  };
-	  this.ws.onerror = function (e) {
-	    self.onError('websocket error', e);
-	  };
-	};
-
-	/**
-	 * Writes data to socket.
-	 *
-	 * @param {Array} array of packets.
-	 * @api private
-	 */
-
-	WS.prototype.write = function (packets) {
-	  var self = this;
-	  this.writable = false;
-
-	  // encodePacket efficient as it uses WS framing
-	  // no need for encodePayload
-	  var total = packets.length;
-	  for (var i = 0, l = total; i < l; i++) {
-	    (function (packet) {
-	      parser.encodePacket(packet, self.supportsBinary, function (data) {
-	        if (!self.usingBrowserWebSocket) {
-	          // always create a new object (GH-437)
-	          var opts = {};
-	          if (packet.options) {
-	            opts.compress = packet.options.compress;
-	          }
-
-	          if (self.perMessageDeflate) {
-	            var len = 'string' === typeof data ? Buffer.byteLength(data) : data.length;
-	            if (len < self.perMessageDeflate.threshold) {
-	              opts.compress = false;
-	            }
-	          }
-	        }
-
-	        // Sometimes the websocket has already been closed but the browser didn't
-	        // have a chance of informing us about it yet, in that case send will
-	        // throw an error
-	        try {
-	          if (self.usingBrowserWebSocket) {
-	            // TypeError is thrown when passing the second argument on Safari
-	            self.ws.send(data);
-	          } else {
-	            self.ws.send(data, opts);
-	          }
-	        } catch (e) {
-	          debug('websocket closed before onclose event');
-	        }
-
-	        --total || done();
-	      });
-	    })(packets[i]);
-	  }
-
-	  function done () {
-	    self.emit('flush');
-
-	    // fake drain
-	    // defer to next tick to allow Socket to clear writeBuffer
-	    setTimeout(function () {
-	      self.writable = true;
-	      self.emit('drain');
-	    }, 0);
-	  }
-	};
-
-	/**
-	 * Called upon close
-	 *
-	 * @api private
-	 */
-
-	WS.prototype.onClose = function () {
-	  Transport.prototype.onClose.call(this);
-	};
-
-	/**
-	 * Closes socket.
-	 *
-	 * @api private
-	 */
-
-	WS.prototype.doClose = function () {
-	  if (typeof this.ws !== 'undefined') {
-	    this.ws.close();
-	  }
-	};
-
-	/**
-	 * Generates uri for connection.
-	 *
-	 * @api private
-	 */
-
-	WS.prototype.uri = function () {
-	  var query = this.query || {};
-	  var schema = this.secure ? 'wss' : 'ws';
-	  var port = '';
-
-	  // avoid port if default for schema
-	  if (this.port && (('wss' === schema && Number(this.port) !== 443) ||
-	    ('ws' === schema && Number(this.port) !== 80))) {
-	    port = ':' + this.port;
-	  }
-
-	  // append timestamp to URI
-	  if (this.timestampRequests) {
-	    query[this.timestampParam] = yeast();
-	  }
-
-	  // communicate binary support capabilities
-	  if (!this.supportsBinary) {
-	    query.b64 = 1;
-	  }
-
-	  query = parseqs.encode(query);
-
-	  // prepend ? to query
-	  if (query.length) {
-	    query = '?' + query;
-	  }
-
-	  var ipv6 = this.hostname.indexOf(':') !== -1;
-	  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
-	};
-
-	/**
-	 * Feature detection for WebSocket.
-	 *
-	 * @return {Boolean} whether this transport is available.
-	 * @api public
-	 */
-
-	WS.prototype.check = function () {
-	  return !!WebSocketImpl && !('__initialize' in WebSocketImpl && this.name === WS.prototype.name);
-	};
-
-
-/***/ },
-/* 27 */
+/* 18 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 28 */
-/***/ function(module, exports) {
-
-	
-	var indexOf = [].indexOf;
-
-	module.exports = function(arr, obj){
-	  if (indexOf) return arr.indexOf(obj);
-	  for (var i = 0; i < arr.length; ++i) {
-	    if (arr[i] === obj) return i;
-	  }
-	  return -1;
-	};
-
-/***/ },
-/* 29 */
+/* 19 */
 /***/ function(module, exports) {
 
 	/**
